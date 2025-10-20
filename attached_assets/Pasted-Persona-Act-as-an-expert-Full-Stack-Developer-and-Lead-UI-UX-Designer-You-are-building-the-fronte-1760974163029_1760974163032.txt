@@ -1,0 +1,100 @@
+Persona:
+Act as an expert Full-Stack Developer and Lead UI/UX Designer. You are building the frontend for a revolutionary new application called "Cortex," the world's first AI-Driven ERP system. Your tools are Next.js 14 (using the App Router), React, and Tailwind CSS. You prioritize creating a stunning, modern, and highly functional user interface that is both intuitive and powerful.
+Task:
+Your primary task is to create the foundational web application for Cortex. This involves building the public-facing landing page, the core application layout, and the dynamic, data-driven user interface for viewing and managing ERP data. The application's structure is entirely defined by a graph database schema, which you will interact with via a backend API.
+Context: The Cortex Architecture
+The entire ERP is metadata-driven. The backend will provide you with the structure of the application through a few key API endpoints.
+1. The Navigation Structure (/api/modules)
+This endpoint returns an array of all modules and the DocTypes (data tables) they contain. The user interface will use this to build its main navigation.
+Example Response:
+code
+JSON
+[
+  {
+    "moduleName": "Accounts",
+    "docTypeNames": ["Account", "Journal Entry", "Purchase Invoice", "Sales Invoice"]
+  },
+  {
+    "moduleName": "Assets",
+    "docTypeNames": ["Asset", "Asset Category", "Location"]
+  },
+  {
+    "moduleName": "Stock",
+    "docTypeNames": ["Item", "Warehouse", "Stock Entry", "Delivery Note"]
+  }
+]
+2. The DocType Schema (/api/doctypes/[doctype_name])
+When a user navigates to a DocType page, you will fetch its schema. This schema defines the columns in the table and the fields in the creation/editing forms. It's an array of Field objects.
+Example Response for GET /api/doctypes/Opportunity:
+code
+JSON
+[
+  {"fieldname": "opportunity_name", "label": "Opportunity Name", "fieldtype": "Data", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "customer", "label": "Customer", "fieldtype": "Link", "options": "Customer", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "status", "label": "Status", "fieldtype": "Select", "options": "Open\nProspecting\nClosed Won\nClosed Lost", "in_list_view": 1},
+  {"fieldname": "value", "label": "Value", "fieldtype": "Currency", "in_list_view": 1},
+  {"fieldname": "notes", "label": "Notes", "fieldtype": "Text Editor", "in_list_view": 0}
+]
+Key Field Properties:
+fieldname: The internal ID, used for API calls.
+label: The human-readable display name.
+fieldtype: Crucial for rendering. Can be Data, Float, Currency, Text Editor, Select, or Link.
+options: For Select, it's a newline-separated list of choices. For Link, it's the name of the DocType it links to.
+in_list_view: If 1, show this field as a column in the main table view.
+reqd: If 1, this field is required in forms.
+3. The Data Endpoints
+GET /api/docs/[doctype_name]: Returns a paginated list of documents for a given DocType.
+GET /api/docs/[doctype_name]/[id]: Returns a single document's data.
+POST /api/docs/[doctype_name]: Creates a new document.
+PUT /api/docs/[doctype_name]/[id]: Updates an existing document.
+DELETE /api/docs/[doctype_name]/[id]: Deletes a document.
+Implementation Plan: A Phased Approach
+Please follow these phases in order.
+Phase 1: The Public-Facing Website & Project Setup
+Setup: Initialize a new Next.js 14 project with the App Router and Tailwind CSS.
+Theme: Configure Tailwind with the "stone" color palette. Create a themes.js or similar to manage dark and light mode colors. The overall aesthetic is minimalist, professional, and slightly futuristic to match the "AI" theme. Think black, white, and shades of stone/gray, with a single, sharp accent color for calls to action.
+Landing Page (/):
+Hero Section: A stunning, full-screen section with a clean, bold headline like "Cortex: The Self-Operating ERP." Use a subtle, abstract animated background (e.g., slowly moving neural network or data plexus). Include a primary call-to-action button: "Login" or "Explore Demo".
+Navigation Bar: A sleek, minimal navbar with links for "Features," "Pricing," "About," and a prominent "Login" button.
+Login Page (/login): A simple, centered form for email and password. Maintain the minimalist, high-tech aesthetic.
+Phase 2: Core Application Layout
+Main Layout (/layout.js for the app): Create a protected layout for the main application. It should feature:
+A collapsible main sidebar on the left.
+A header with user profile/settings dropdown and a dark/light mode toggle.
+A main content area where the pages will be rendered.
+Sidebar Navigation: The sidebar should fetch data from /api/modules. It will render a list of modules (e.g., "Accounts," "Assets"). Each module should be an accordion or collapsible section that, when clicked, reveals the DocTypes within it as navigation links (e.g., "Account," "Journal Entry").
+Phase 3: The Dynamic List View (The /[doctype] Page)
+Dynamic Routing: Create a dynamic route at app/[doctype]/page.js.
+Data Fetching: On this page, use the doctype parameter from the URL to:
+Fetch the DocType schema from /api/doctypes/[doctype].
+Fetch the first page of data from /api/docs/[doctype].
+The DataTable Component: Create a highly reusable DataTable.js component.
+It accepts the schema and data as props.
+It dynamically generates columns only for fields where in_list_view is 1. The column header should be the field.label.
+It should include features like pagination, a search bar, and a "New" button in the header.
+Each row should be a link to the full document view: /[doctype]/[id].
+Each row should have an "Edit" and "Delete" icon/button.
+Phase 4: The Dynamic Form View (Create/Edit)
+Dynamic Routing: Create a dynamic route at app/[doctype]/[id]/[action]/page.js where action can be "create" or "edit".
+The DynamicForm Component: This is the heart of the application.
+It fetches the DocType schema (/api/doctypes/[doctype]).
+It maps over the schema array to render a form field for each Field.
+The DynamicFormField Component: Create a component that renders the correct input based on field.fieldtype:
+Data, Float, Currency: Render <input type="text"> or number.
+Text Editor: Render a rich text editor component.
+Select: Render a <select> dropdown using the field.options.
+Link (Crucial Feature): This is the most complex field.
+Render it as a text input with a "Search" or "Browse" icon.
+Clicking it opens a Modal Window.
+Inside the modal, render your reusable DataTable component, but this time, it's for the linked DocType (e.g., if the field is customer which links to the Customer DocType, the modal shows a searchable list of all customers).
+The modal's table should be customizable. By default, it shows important columns, but a "Configure Columns" button lets the user choose which fields of the linked DocType to display.
+When the user selects a row in the modal, the modal closes, and the selected document's name/ID populates the form field.
+Form Logic: Handle form submission via POST (for create) or PUT (for edit) requests.
+Phase 5: The Full Document View
+Dynamic Routing: Create a route at app/[doctype]/[id]/page.js.
+Display: Fetch the schema and the specific document's data. Display all fields and their values in a clean, read-only, two-column layout. Include an "Edit" button that links to the edit page.
+Final Constraints:
+Prioritize the foundational CRUD functionality first. The "AI features" like report generation and dashboards will be built on top of this later.
+Ensure all components are modular and reusable.
+The UI must be fully responsive and work on all screen sizes.
+Write clean, commented, and professional-grade code.
