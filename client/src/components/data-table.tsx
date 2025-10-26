@@ -15,6 +15,7 @@ import { type Field, type Document } from "@shared/schema";
 
 interface DataTableProps {
   doctype: string;
+  module?: string;
   schema: Field[];
   data: Document[];
   total: number;
@@ -28,6 +29,7 @@ interface DataTableProps {
 
 export function DataTable({
   doctype,
+  module,
   schema,
   data,
   total,
@@ -40,7 +42,15 @@ export function DataTable({
 }: DataTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const listViewFields = schema.filter((field) => field.in_list_view === 1);
+  // Handle Neo4j integer objects {low: 0, high: 0}
+  const normalizeValue = (value: any): any => {
+    if (value && typeof value === 'object' && 'low' in value) {
+      return value.low;
+    }
+    return value;
+  };
+
+  const listViewFields = schema.filter((field) => normalizeValue(field.in_list_view) === 1);
   const totalPages = Math.ceil(total / pageSize);
 
   const filteredData = data.filter((doc) => {
@@ -76,7 +86,7 @@ export function DataTable({
           data-testid="input-search"
         />
         {!isSelectable && (
-          <Link href={`/app/${doctype}/new`}>
+          <Link href={module ? `/app/${module}/${doctype}/new` : `/app/${doctype}/new`}>
             <Button data-testid="button-new">New {doctype}</Button>
           </Link>
         )}
@@ -119,7 +129,7 @@ export function DataTable({
                     <TableCell key={field.fieldname} className="font-mono text-sm tabular-nums">
                       {!isSelectable && field.fieldname === listViewFields[0].fieldname ? (
                         <Link
-                          href={`/app/${doctype}/${doc.name}`}
+                          href={module ? `/app/${module}/${doctype}/${doc.name}` : `/app/${doctype}/${doc.name}`}
                           className="text-primary hover:underline"
                           data-testid={`link-document-${doc.name}`}
                         >
@@ -133,7 +143,7 @@ export function DataTable({
                   {!isSelectable && (
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Link href={`/app/${doctype}/${doc.name}/edit`}>
+                        <Link href={module ? `/app/${module}/${doctype}/${doc.name}/edit` : `/app/${doctype}/${doc.name}/edit`}>
                           <Button
                             size="icon"
                             variant="ghost"

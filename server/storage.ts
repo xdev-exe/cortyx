@@ -66,22 +66,54 @@ export class Neo4jStorage implements IStorage {
   }
 
   async getDocTypeSchema(docTypeName: string): Promise<Field[] | undefined> {
-    const query = `
-      MATCH (:DocType {name: $docTypeName})-->(f:Field)
-      RETURN f {
-        fieldname: f.fieldname,
-        label: f.label,
-        fieldtype: f.fieldtype,
-        options: f.options,
-        reqd: f.required,
-        in_list_view: f.in_list_view,
-        description: f.description
-        // Add other properties as needed
-      } AS field
-      ORDER BY f.order
+    // First check if the DocType exists
+    const doctypeCheckQuery = `
+      MATCH (d:DocType {name: $docTypeName})
+      RETURN d.name as name
+      LIMIT 1
     `;
-    const results = await executeQuery<{ field: Field }>(query, { docTypeName });
-    return results.map(r => r.field);
+    
+    console.log(`[Storage] Checking if DocType exists: "${docTypeName}"`);
+    const doctypeExists = await executeQuery<{ name: string }>(doctypeCheckQuery, { docTypeName });
+    
+    if (doctypeExists.length === 0) {
+      console.log(`[Storage] DocType not found: "${docTypeName}"`);
+      return undefined;
+    }
+    
+    // Query DocType and its fields using field_order array for correct sequence
+    const query = `
+      MATCH (d:DocType {name: $docTypeName})
+      UNWIND d.field_order AS ordered_fieldname
+      MATCH (d)-[:HAS_FIELD]->(f:Field {fieldname: ordered_fieldname})
+      RETURN f.fieldname as fieldname,
+             COALESCE(f.label, f.fieldname) as label,
+             f.fieldtype as fieldtype,
+             f.options as options,
+             toInteger(COALESCE(f.reqd, 0)) as reqd,
+             toInteger(COALESCE(f.in_list_view, 0)) as in_list_view,
+             f.description as description,
+             f.default as default,
+             toInteger(COALESCE(f.hidden, 0)) as hidden,
+             toInteger(COALESCE(f.read_only, 0)) as read_only
+    `;
+    
+    console.log(`[Storage] Fetching fields for DocType: "${docTypeName}"`);
+    const results = await executeQuery<Field>(query, { docTypeName });
+    
+    console.log(`[Storage] Found ${results.length} fields for "${docTypeName}"`);
+    
+    // Convert Neo4j Integer objects {low: n, high: 0} to JavaScript numbers
+    const normalizedResults = results.map(field => ({
+      ...field,
+      reqd: typeof field.reqd === 'object' && 'low' in field.reqd ? field.reqd.low : field.reqd,
+      in_list_view: typeof field.in_list_view === 'object' && 'low' in field.in_list_view ? field.in_list_view.low : field.in_list_view,
+      hidden: typeof field.hidden === 'object' && 'low' in field.hidden ? field.hidden.low : field.hidden,
+      read_only: typeof field.read_only === 'object' && 'low' in field.read_only ? field.read_only.low : field.read_only,
+    }));
+    
+    // Return empty array if no fields (DocType exists but has no fields yet)
+    return normalizedResults;
   }
 
   async getDocuments(docTypeName: string, page: number = 1, pageSize: number = 20): Promise<{ data: Document[]; total: number }> {
@@ -94,8 +126,8 @@ export class Neo4jStorage implements IStorage {
       MATCH (doc:\`${escapedLabel}\`)
       RETURN doc { .*, name: COALESCE(doc.name, elementId(doc)) } AS data
       ORDER BY COALESCE(doc.modified, doc.creation, datetime()) DESC
-      SKIP $offset
-      LIMIT $pageSize
+      SKIP toInteger($offset)
+      LIMIT toInteger($pageSize)
     `;
 
     console.log(`[Storage] Querying documents for label: "${docTypeName}"`);

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { LogOut, User } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -13,13 +13,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { FloatingChat } from "@/components/floating-chat";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     const user = localStorage.getItem("Cortyx-user");
@@ -27,6 +28,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
       setLocation("/login");
     }
   }, [setLocation]);
+
+  // Extract module, doctype, and documentId from current URL
+  const context = useMemo(() => {
+    const pathSegments = location.split('/').filter(Boolean);
+    // URL pattern: /app/:module/:doctype or /app/:module/:doctype/:id
+    if (pathSegments[0] === 'app') {
+      return {
+        module: pathSegments[1] || undefined,
+        doctype: pathSegments[2] || undefined,
+        documentId: pathSegments[3] || undefined,
+      };
+    }
+    return {};
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("Cortyx-user");
@@ -80,6 +95,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
             {children}
           </main>
         </div>
+        
+        {/* Floating Chat - appears on all /app/* pages */}
+        <FloatingChat
+          module={context.module}
+          doctype={context.doctype}
+          documentId={context.documentId}
+        />
       </div>
     </SidebarProvider>
   );

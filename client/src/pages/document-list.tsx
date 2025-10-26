@@ -8,7 +8,9 @@ import { useToast } from "@/hooks/use-toast";
 import { type Field, type PaginatedResponse, type Document } from "@shared/schema";
 
 export default function DocumentList() {
-  const [, params] = useRoute("/app/:doctype");
+  // All document lists come from /app/:module/:doctype pattern
+  const [, params] = useRoute("/app/:module/:doctype");
+  const module = params?.module || "";
   const doctype = params?.doctype || "";
   const [page, setPage] = useState(1);
   const { toast } = useToast();
@@ -90,6 +92,7 @@ export default function DocumentList() {
       <div className="flex-1 overflow-auto px-8 py-6">
         <DataTable
           doctype={doctype}
+          module={module}
           schema={schema}
           data={docsResponse.data}
           total={docsResponse.total}

@@ -6,7 +6,8 @@ import { Card } from "@/components/ui/card";
 import { type Field, type Document } from "@shared/schema";
 
 export default function DocumentDetail() {
-  const [, params] = useRoute("/app/:doctype/:id");
+  // All document details come from /app/:module/:doctype/:id pattern
+  const [, params] = useRoute("/app/:module/:doctype/:id");
   const doctype = params?.doctype || "";
   const id = params?.id || "";
 

@@ -7,14 +7,15 @@ import { useToast } from "@/hooks/use-toast";
 import { type Field, type Document } from "@shared/schema";
 
 export default function DocumentForm() {
-  const [, params] = useRoute("/app/:doctype/:action");
-  const [, paramsWithId] = useRoute("/app/:doctype/:id/:action");
+  // Check for edit mode: /app/:module/:doctype/:id/edit
+  const [matchedEdit, editParams] = useRoute("/app/:module/:doctype/:id/edit");
+  // Check for new mode: /app/:module/:doctype/new
+  const [matchedNew, newParams] = useRoute("/app/:module/:doctype/new");
   
-  const doctype = params?.doctype || paramsWithId?.doctype || "";
-  const action = params?.action || paramsWithId?.action || "";
-  const id = paramsWithId?.id;
+  const doctype = matchedEdit ? editParams?.doctype || "" : newParams?.doctype || "";
+  const id = matchedEdit ? editParams?.id : undefined;
+  const isEdit = matchedEdit;
   
-  const isEdit = action === "edit";
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 

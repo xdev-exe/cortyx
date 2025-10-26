@@ -18,15 +18,11 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/login" component={Login} />
       
-      <Route path="/app/:doctype">
-        {() => (
-          <AppLayout>
-            <DocumentList />
-          </AppLayout>
-        )}
-      </Route>
+      {/* Simplified routing: Assume 2-segment paths are module/doctype for document lists */}
+      {/* This matches the old cortyx app where clicking on a doctype from the sidebar navigates to /app/Module/DocType */}
       
-      <Route path="/app/:doctype/new">
+      {/* /app/Module/DocType/ID/edit */}
+      <Route path="/app/:module/:doctype/:id/edit">
         {() => (
           <AppLayout>
             <DocumentForm />
@@ -34,7 +30,8 @@ function Router() {
         )}
       </Route>
       
-      <Route path="/app/:doctype/:id/edit">
+      {/* /app/Module/DocType/new */}
+      <Route path="/app/:module/:doctype/new">
         {() => (
           <AppLayout>
             <DocumentForm />
@@ -42,10 +39,20 @@ function Router() {
         )}
       </Route>
       
-      <Route path="/app/:doctype/:id">
+      {/* /app/Module/DocType/ID */}
+      <Route path="/app/:module/:doctype/:id">
         {() => (
           <AppLayout>
             <DocumentDetail />
+          </AppLayout>
+        )}
+      </Route>
+      
+      {/* /app/Module/DocType - Document list */}
+      <Route path="/app/:module/:doctype">
+        {() => (
+          <AppLayout>
+            <DocumentList />
           </AppLayout>
         )}
       </Route>

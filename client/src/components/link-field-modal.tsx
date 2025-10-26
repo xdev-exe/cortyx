@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -54,7 +54,15 @@ export function LinkFieldModal({
     enabled: isOpen && !!linkedDocType,
   });
 
-  const listViewFields = schema?.filter((field) => field.in_list_view === 1) || [];
+  // Handle Neo4j integer objects {low: 0, high: 0}
+  const normalizeValue = (value: any): any => {
+    if (value && typeof value === 'object' && 'low' in value) {
+      return value.low;
+    }
+    return value;
+  };
+
+  const listViewFields = schema?.filter((field) => normalizeValue(field.in_list_view) === 1) || [];
   
   const filteredData = useMemo(() => {
     if (!docsResponse?.data) return [];
@@ -99,18 +107,10 @@ export function LinkFieldModal({
       }
     }}>
       <DialogContent className="max-w-5xl max-h-[80vh] overflow-hidden flex flex-col">
-        <DialogHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
+        <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Select {linkedDocType}
           </DialogTitle>
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={onClose}
-            data-testid="button-close-modal"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </DialogHeader>
 
         <div className="py-4">
@@ -149,6 +149,7 @@ export function LinkFieldModal({
                           {field.label}
                         </TableHead>
                       ))}
+                      <TableHead className="w-12"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -174,6 +175,22 @@ export function LinkFieldModal({
                               {formatValue(doc[field.fieldname], field.fieldtype)}
                             </TableCell>
                           ))}
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                // Note: Using just doctype in URL - will need module info for proper routing
+                                window.open(`/app/${linkedDocType}/${doc.name}`, '_blank');
+                              }}
+                              title="Open in new tab"
+                              data-testid={`button-open-${doc.name}`}
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))
                     )}
