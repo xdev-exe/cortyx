@@ -1,4 +1,4 @@
-# Cortex AI-Driven ERP: Design Guidelines
+# Cortyx AI-Driven ERP: Design Guidelines
 
 ## Design Approach
 **Selected Approach:** Custom Design System with Material Design influences
@@ -139,7 +139,7 @@
 ### Hero Section
 - **Layout:** Full viewport height (min-h-screen), centered content
 - **Background:** Animated neural network visualization - subtle, slow-moving connections between nodes, low opacity (20-30%), primary accent color with gradients
-- **Headline:** "Cortex: The Self-Operating ERP" - Display font, 3.5rem, font-weight 700, with subtle text gradient from white to stone-200
+- **Headline:** "Cortyx: The Self-Operating ERP" - Display font, 3.5rem, font-weight 700, with subtle text gradient from white to stone-200
 - **Subheadline:** 1.25rem, stone-300, max-w-2xl, explaining AI-driven automation
 - **CTA Button:** Large primary button "Login" or "Explore Demo", px-8 py-4, text-lg
 - **Visual Treatment:** Dark background (stone-950), content overlaid with subtle blur backdrop

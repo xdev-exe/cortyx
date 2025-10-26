@@ -29,7 +29,7 @@ export default function Login() {
       return await res.json();
     },
     onSuccess: (data) => {
-      localStorage.setItem("cortex-user", JSON.stringify({ email: data.user.email }));
+      localStorage.setItem("Cortyx-user", JSON.stringify({ email: data.user.email }));
       toast({
         title: "Success",
         description: "Logged in successfully",
@@ -61,7 +61,7 @@ export default function Login() {
             <div className="h-14 w-14 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Brain className="h-8 w-8 text-primary" />
             </div>
-            <h1 className="font-display font-bold text-2xl mb-2">Welcome to Cortex</h1>
+            <h1 className="font-display font-bold text-2xl mb-2">Welcome to Cortyx</h1>
             <p className="text-sm text-muted-foreground text-center">
               Sign in to access your AI-driven ERP system
             </p>

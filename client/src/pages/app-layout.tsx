@@ -22,18 +22,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    const user = localStorage.getItem("cortex-user");
+    const user = localStorage.getItem("Cortyx-user");
     if (!user) {
       setLocation("/login");
     }
   }, [setLocation]);
 
   const handleLogout = () => {
-    localStorage.removeItem("cortex-user");
+    localStorage.removeItem("Cortyx-user");
     setLocation("/login");
   };
 
-  const user = JSON.parse(localStorage.getItem("cortex-user") || "{}");
+  const user = JSON.parse(localStorage.getItem("Cortyx-user") || "{}");
 
   const style = {
     "--sidebar-width": "16rem",
@@ -62,7 +62,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <div className="flex flex-col">
                       <span className="font-medium">Account</span>
                       <span className="text-xs text-muted-foreground truncate">
-                        {user.email || "user@cortex.ai"}
+                        {user.email || "user@Cortyx.ai"}
                       </span>
                     </div>
                   </DropdownMenuLabel>

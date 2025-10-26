@@ -44,7 +44,7 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border px-4 py-3">
         <div className="flex items-center gap-2" data-testid="sidebar-header">
           <Brain className="h-6 w-6 text-primary" />
-          <span className="font-display font-semibold text-lg">Cortex</span>
+          <span className="font-display font-semibold text-lg">Cortyx</span>
         </div>
       </SidebarHeader>
 
@@ -85,7 +85,8 @@ export function AppSidebar() {
                         <CollapsibleContent>
                           <SidebarMenuSub>
                             {module.docTypeNames.map((docType) => {
-                              const isActive = location.includes(`/app/${docType}`);
+                              const to = `/app/${module.moduleName}/${docType}`;
+                              const isActive = location.includes(to);
                               return (
                                 <SidebarMenuSubItem key={docType}>
                                   <SidebarMenuSubButton
@@ -93,7 +94,7 @@ export function AppSidebar() {
                                     isActive={isActive}
                                     data-testid={`link-doctype-${docType.toLowerCase().replace(/\s+/g, "-")}`}
                                   >
-                                    <Link href={`/app/${docType}`}>
+                                    <Link href={to}>
                                       <span>{docType}</span>
                                     </Link>
                                   </SidebarMenuSubButton>

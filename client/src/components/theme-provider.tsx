@@ -11,7 +11,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem("cortex-theme") as Theme;
+    const stored = localStorage.getItem("Cortyx-theme") as Theme;
     return stored || "light";
   });
 
@@ -19,7 +19,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
-    localStorage.setItem("cortex-theme", theme);
+    localStorage.setItem("Cortyx-theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {

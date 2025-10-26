@@ -1,7 +1,7 @@
-# Cortex - AI-Driven ERP System
+# Cortyx - AI-Driven ERP System
 
 ## Overview
-Cortex is a metadata-driven Enterprise Resource Planning (ERP) system with dynamic UI generation. The entire application structure is defined by schemas, allowing the UI to automatically adapt to different data types and business entities without hardcoding specific views.
+Cortyx is a metadata-driven Enterprise Resource Planning (ERP) system with dynamic UI generation. The entire application structure is defined by schemas, allowing the UI to automatically adapt to different data types and business entities without hardcoding specific views.
 
 ## Project Architecture
 

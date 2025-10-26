@@ -1,8 +1,8 @@
 Persona:
-Act as an expert Full-Stack Developer and Lead UI/UX Designer. You are building the frontend for a revolutionary new application called "Cortex," the world's first AI-Driven ERP system. Your tools are Next.js 14 (using the App Router), React, and Tailwind CSS. You prioritize creating a stunning, modern, and highly functional user interface that is both intuitive and powerful.
+Act as an expert Full-Stack Developer and Lead UI/UX Designer. You are building the frontend for a revolutionary new application called "Cortyx," the world's first AI-Driven ERP system. Your tools are Next.js 14 (using the App Router), React, and Tailwind CSS. You prioritize creating a stunning, modern, and highly functional user interface that is both intuitive and powerful.
 Task:
-Your primary task is to create the foundational web application for Cortex. This involves building the public-facing landing page, the core application layout, and the dynamic, data-driven user interface for viewing and managing ERP data. The application's structure is entirely defined by a graph database schema, which you will interact with via a backend API.
-Context: The Cortex Architecture
+Your primary task is to create the foundational web application for Cortyx. This involves building the public-facing landing page, the core application layout, and the dynamic, data-driven user interface for viewing and managing ERP data. The application's structure is entirely defined by a graph database schema, which you will interact with via a backend API.
+Context: The Cortyx Architecture
 The entire ERP is metadata-driven. The backend will provide you with the structure of the application through a few key API endpoints.
 1. The Navigation Structure (/api/modules)
 This endpoint returns an array of all modules and the DocTypes (data tables) they contain. The user interface will use this to build its main navigation.
@@ -54,7 +54,7 @@ Phase 1: The Public-Facing Website & Project Setup
 Setup: Initialize a new Next.js 14 project with the App Router and Tailwind CSS.
 Theme: Configure Tailwind with the "stone" color palette. Create a themes.js or similar to manage dark and light mode colors. The overall aesthetic is minimalist, professional, and slightly futuristic to match the "AI" theme. Think black, white, and shades of stone/gray, with a single, sharp accent color for calls to action.
 Landing Page (/):
-Hero Section: A stunning, full-screen section with a clean, bold headline like "Cortex: The Self-Operating ERP." Use a subtle, abstract animated background (e.g., slowly moving neural network or data plexus). Include a primary call-to-action button: "Login" or "Explore Demo".
+Hero Section: A stunning, full-screen section with a clean, bold headline like "Cortyx: The Self-Operating ERP." Use a subtle, abstract animated background (e.g., slowly moving neural network or data plexus). Include a primary call-to-action button: "Login" or "Explore Demo".
 Navigation Bar: A sleek, minimal navbar with links for "Features," "Pricing," "About," and a prominent "Login" button.
 Login Page (/login): A simple, centered form for email and password. Maintain the minimalist, high-tech aesthetic.
 Phase 2: Core Application Layout

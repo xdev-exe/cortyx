@@ -11,7 +11,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Brain className="h-6 w-6 text-primary" />
-            <span className="font-display font-semibold text-lg">Cortex</span>
+            <span className="font-display font-semibold text-lg">Cortyx</span>
           </div>
           
           <div className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -49,7 +49,7 @@ export default function Landing() {
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-6 bg-gradient-to-br from-white via-stone-100 to-stone-300 bg-clip-text text-transparent leading-tight tracking-tight">
-            Cortex: The Self-Operating ERP
+            Cortyx: The Self-Operating ERP
           </h1>
           
           <p className="text-lg md:text-xl text-stone-300 max-w-2xl mx-auto mb-10 leading-relaxed">
@@ -124,9 +124,9 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Brain className="h-5 w-5 text-primary" />
-            <span className="font-display font-semibold">Cortex</span>
+            <span className="font-display font-semibold">Cortyx</span>
           </div>
-          <p>&copy; 2025 Cortex ERP. All rights reserved.</p>
+          <p>&copy; 2025 Cortyx ERP. All rights reserved.</p>
         </div>
       </footer>
     </div>
